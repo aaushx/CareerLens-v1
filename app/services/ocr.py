@@ -13,9 +13,11 @@ def normalize_linkedin_url(url: str) -> str | None:
     if not url or not isinstance(url, str):
         return None
     url = url.strip()
-    match = re.search(r'(?:https?://)?(?:www\.)?linkedin\.com/in/([a-zA-Z0-9_-]+)/?', url, re.IGNORECASE)
+    match = re.search(
+        r"(?:https?://)?(?:www\.)?linkedin\.com/in/([a-zA-Z0-9_-]+)/?", url, re.IGNORECASE
+    )
     if match:
-        profile_slug = match.group(1).rstrip('/')
+        profile_slug = match.group(1).rstrip("/")
         return f"https://www.linkedin.com/in/{profile_slug}"
     return None
 

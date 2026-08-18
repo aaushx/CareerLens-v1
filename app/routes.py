@@ -4,13 +4,12 @@ import re
 import threading
 import uuid
 
-import fitz
 from flask import Blueprint, current_app, jsonify, render_template, request, send_file, session
 from werkzeug.utils import secure_filename
 
 from app import database
 from app.services.analysis import perform_analysis
-from app.services.ocr import extract_text_and_links_from_pdf, extract_text_with_ocr
+from app.services.ocr import extract_text_and_links_from_pdf
 from app.services.pdf import generate_pdf_report
 from app.utils.file_utils import cleanup_old_uploads
 
@@ -483,3 +482,11 @@ def download_pdf():
             ),
             500,
         )
+
+
+# -------------------------------
+# Health Check Route
+# -------------------------------
+@bp.route("/health", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"}), 200

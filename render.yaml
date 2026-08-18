@@ -6,4 +6,4 @@ services:
     region: oregon
     branch: main
     numInstances: 1
-    healthCheckPath: /
+    healthCheckPath: /health

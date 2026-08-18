@@ -6,18 +6,24 @@ import unittest
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import fitz
+
 try:
-    from app.services.ocr import normalize_linkedin_url, extract_pdf_links, extract_text_and_links_from_pdf
-    from app.services.scoring import calculate_resume_strength
     from app.services.analysis import perform_analysis
-except ImportError:
-    from app import (
-        normalize_linkedin_url,
+    from app.services.ocr import (
         extract_pdf_links,
         extract_text_and_links_from_pdf,
-        calculate_resume_strength,
-        perform_analysis
+        normalize_linkedin_url,
     )
+    from app.services.scoring import calculate_resume_strength
+except ImportError:
+    from app import (
+        calculate_resume_strength,
+        extract_pdf_links,
+        extract_text_and_links_from_pdf,
+        normalize_linkedin_url,
+        perform_analysis,
+    )
+
 
 class TestPDFLinkExtraction(unittest.TestCase):
 
@@ -35,11 +41,7 @@ class TestPDFLinkExtraction(unittest.TestCase):
 
         if link_annotations:
             for rect, uri in link_annotations:
-                page.insert_link({
-                    "kind": fitz.LINK_URI,
-                    "from": rect,
-                    "uri": uri
-                })
+                page.insert_link({"kind": fitz.LINK_URI, "from": rect, "uri": uri})
 
         doc.save(pdf_path)
         doc.close()
@@ -49,9 +51,18 @@ class TestPDFLinkExtraction(unittest.TestCase):
     # 1. LinkedIn URL Normalization Tests
     # ---------------------------------------------------------
     def test_normalize_linkedin_standard(self):
-        self.assertEqual(normalize_linkedin_url("https://www.linkedin.com/in/johndoe"), "https://www.linkedin.com/in/johndoe")
-        self.assertEqual(normalize_linkedin_url("http://linkedin.com/in/johndoe/"), "https://www.linkedin.com/in/johndoe")
-        self.assertEqual(normalize_linkedin_url("linkedin.com/in/john-doe-123"), "https://www.linkedin.com/in/john-doe-123")
+        self.assertEqual(
+            normalize_linkedin_url("https://www.linkedin.com/in/johndoe"),
+            "https://www.linkedin.com/in/johndoe",
+        )
+        self.assertEqual(
+            normalize_linkedin_url("http://linkedin.com/in/johndoe/"),
+            "https://www.linkedin.com/in/johndoe",
+        )
+        self.assertEqual(
+            normalize_linkedin_url("linkedin.com/in/john-doe-123"),
+            "https://www.linkedin.com/in/john-doe-123",
+        )
 
     def test_normalize_linkedin_non_profiles(self):
         self.assertIsNone(normalize_linkedin_url("https://github.com/johndoe"))
@@ -69,11 +80,13 @@ class TestPDFLinkExtraction(unittest.TestCase):
         page = doc.new_page()
         rect1 = fitz.Rect(50, 50, 150, 70)
         page.insert_textbox(rect1, "LinkedIn Profile")
-        page.insert_link({
-            "kind": fitz.LINK_URI,
-            "from": rect1,
-            "uri": "https://www.linkedin.com/in/alexander-davis/"
-        })
+        page.insert_link(
+            {
+                "kind": fitz.LINK_URI,
+                "from": rect1,
+                "uri": "https://www.linkedin.com/in/alexander-davis/",
+            }
+        )
         pdf_bytes = doc.tobytes()
         doc.close()
 
@@ -114,7 +127,7 @@ class TestPDFLinkExtraction(unittest.TestCase):
         )
         annotations = [
             (fitz.Rect(200, 60, 260, 75), "https://www.linkedin.com/in/jane-doe-developer/"),
-            (fitz.Rect(270, 60, 320, 75), "https://github.com/janedoe")
+            (fitz.Rect(270, 60, 320, 75), "https://github.com/janedoe"),
         ]
         pdf_path = self.create_pdf(resume_text, annotations)
         text, method = extract_text_and_links_from_pdf(pdf_path)
@@ -159,7 +172,7 @@ class TestPDFLinkExtraction(unittest.TestCase):
         )
         annotations = [
             (fitz.Rect(100, 60, 160, 75), "https://bobtaylor.dev"),
-            (fitz.Rect(170, 60, 220, 75), "https://github.com/bobtaylor")
+            (fitz.Rect(170, 60, 220, 75), "https://github.com/bobtaylor"),
         ]
         pdf_path = self.create_pdf(resume_text, annotations)
         text, method = extract_text_and_links_from_pdf(pdf_path)
@@ -177,6 +190,7 @@ class TestPDFLinkExtraction(unittest.TestCase):
         pdf_path = self.create_pdf(resume_text, annotations)
         text, method = extract_text_and_links_from_pdf(pdf_path)
         self.assertEqual(text.count(full_url), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

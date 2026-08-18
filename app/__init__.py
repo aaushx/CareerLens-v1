@@ -60,6 +60,10 @@ def create_app() -> Flask:
     # 4. Session management hooks
     @app.before_request
     def ensure_session_id():
+        from flask import request
+
+        if request.path == "/health":
+            return
         if "session_id" not in session:
             session["session_id"] = str(uuid.uuid4())
 
