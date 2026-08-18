@@ -18,7 +18,7 @@ def create_app() -> Flask:
     logger = logging.getLogger(__name__)
 
     # 2. Production SECRET_KEY validation
-    flask_env = os.getenv("FLASK_ENV", "production")
+    flask_env = os.getenv("FLASK_ENV", "development")
     secret_key = os.getenv("SECRET_KEY")
 
     if flask_env == "production":

@@ -56,9 +56,15 @@ def calculate_resume_strength(text_lower: str, text_original: str) -> tuple[int,
     breakdown["skills_section"] = {"score": skills_score, "max": 20, "checked": has_skills}
 
     # 5. Contact Info & Links (10 pts)
+    from app.services.ocr import normalize_linkedin_url
+
     links_score = 0
     has_github = "github.com" in text_lower or "github.io" in text_lower
-    has_linkedin = "linkedin.com" in text_lower
+    has_linkedin = (
+        bool(normalize_linkedin_url(text_lower))
+        or ("linkedin.com/in/" in text_lower)
+        or ("linkedin.com" in text_lower)
+    )
     has_email = bool(re.search(r"[\w\.-]+@[\w\.-]+\.\w+", text_lower))
     has_phone = bool(
         re.search(r"\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b", text_lower)

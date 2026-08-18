@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 
 from app import database
 from app.services.analysis import perform_analysis
-from app.services.ocr import extract_text_with_ocr
+from app.services.ocr import extract_text_and_links_from_pdf, extract_text_with_ocr
 from app.services.pdf import generate_pdf_report
 from app.utils.file_utils import cleanup_old_uploads
 
@@ -227,26 +227,11 @@ def upload():
             400,
         )
 
-    extracted_text = ""
-    extraction_method = "PDF Text Extraction"
-
     # -------------------------------
     # Text Extraction & Cleanup Wrapper
     # -------------------------------
     try:
-        # Normal extraction
-        with fitz.open(filepath) as doc:
-            for page in doc:
-                text = page.get_text()
-                if text:
-                    extracted_text += text + "\n"
-
-        # OCR Fallback
-        if len(extracted_text.strip()) < 100:
-            logger.info("PDF text extraction weak. Switching to OCR...")
-            extracted_text = extract_text_with_ocr(filepath)
-            extraction_method = "OCR Extraction"
-
+        extracted_text, extraction_method = extract_text_and_links_from_pdf(filepath)
     except Exception as e:
         logger.error(f"Error during file extraction: {e}", exc_info=True)
         return (

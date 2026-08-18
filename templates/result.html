@@ -1,428 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareerLens Executive Suite — ATS Optimization Report</title>
-    <meta name="description" content="Detailed ATS optimization dashboard with semantic matching, gap analysis, and personalized roadmaps.">
-    
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerLens AI — Executive Dashboard</title>
+  <meta name="description" content="CareerLens AI resume analysis dashboard with ATS scoring, skill gap detection, and personalized recommendations." />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/style.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Bootstrap JS only for modal -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/static/css/style.css" />
+
+  <!-- Early Theme Init to prevent flash of wrong theme -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('cl_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
+  <style>
+    /* Override bootstrap modal backdrop */
+    .modal-backdrop { background: rgba(0,0,0,0.75); }
+    .modal-backdrop.show { opacity: 1; }
+  </style>
 </head>
-<body>
+<body class="cl-dashboard-body">
 
-    <!-- Layout Wrapper -->
-    <div class="app-wrapper-lens">
+  <!-- Atmospheric Spotlight Beams -->
+  <div class="cl-spotlight-left" aria-hidden="true"></div>
+  <div class="cl-spotlight-right" aria-hidden="true"></div>
 
-        <!-- ======== Sidebar ======== -->
-        <aside class="sidebar-lens" id="sidebar">
-            <div>
-                <a href="/" class="sidebar-logo-lens">
-                    <i class="fas fa-clone"></i> CareerLens
-                </a>
-                <div class="sidebar-subtitle-lens">Executive Suite</div>
+  <!-- ════════════════════════════════════════════
+       TOP HEADER BAR
+       ════════════════════════════════════════════ -->
+  <header class="cl-dashboard-topbar">
+    <div class="cl-topbar-inner">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <a href="/" class="cl-brand" style="text-decoration:none;">
+          <div class="cl-brand-matrix" aria-hidden="true">
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+            <span></span><span></span><span></span>
+          </div>
+          <span class="cl-brand-name">CareerLens AI</span>
+        </a>
+        <span class="cl-topbar-badge" id="overview-filename-label">—</span>
+      </div>
 
-                <ul class="sidebar-menu-lens" role="tablist" aria-label="Dashboard views">
-                    <li role="presentation">
-                        <a href="#" class="sidebar-link-lens active" data-tab="overview" role="tab" aria-selected="true" aria-controls="overview-tab-view" id="tab-overview">
-                            <i class="fas fa-chart-pie" aria-hidden="true"></i> Overview
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#" class="sidebar-link-lens" data-tab="analysis" role="tab" aria-selected="false" aria-controls="analysis-tab-view" id="tab-analysis">
-                            <i class="fas fa-chart-line" aria-hidden="true"></i> Analysis
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#" class="sidebar-link-lens" data-tab="skills" role="tab" aria-selected="false" aria-controls="skills-tab-view" id="tab-skills">
-                            <i class="fas fa-brain" aria-hidden="true"></i> Skills
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#" class="sidebar-link-lens" data-tab="analytics" role="tab" aria-selected="false" aria-controls="analytics-tab-view" id="tab-analytics">
-                            <i class="fas fa-network-wired" aria-hidden="true"></i> Analytics
-                        </a>
-                    </li>
-                    <li role="presentation">
-                        <a href="#" class="sidebar-link-lens" data-tab="history" role="tab" aria-selected="false" aria-controls="history-tab-view" id="tab-history">
-                            <i class="fas fa-history" aria-hidden="true"></i> History
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            
-            <div class="sidebar-footer-lens">
-                <a href="/" class="btn-sidebar-new">
-                    <i class="fas fa-plus me-1"></i> New Analysis
-                </a>
-                <a href="#" class="sidebar-link-lens py-2" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                    <i class="fas fa-cog"></i> Settings
-                </a>
-            </div>
-        </aside>
-
-        <!-- ======== Mobile Sidebar Toggle ======== -->
-        <button class="navbar-mobile-toggle" id="sidebar-mobile-toggle" aria-label="Toggle sidebar" title="Menu">
-            <i class="fas fa-bars"></i>
+      <div class="cl-topbar-actions">
+        <button class="cl-theme-toggle" id="theme-toggle-btn" aria-label="Toggle theme" title="Toggle Theme">
+          <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
         </button>
-
-        <!-- ======== Main Content Canvas ======== -->
-        <div class="canvas-lens">
-
-            <!-- ==========================================================
-                 TAB VIEW: OVERVIEW
-                 ========================================================== -->
-            <div class="tab-view-lens active" id="overview-tab-view">
-                
-                <!-- Header -->
-                <div class="canvas-header-lens d-flex justify-content-between align-items-start gap-3 flex-column flex-lg-row">
-                    <div>
-                        <h1 class="canvas-title-lens">Executive Overview</h1>
-                        <p class="canvas-subtitle-lens">Reviewing: <strong id="overview-filename-label">{{ filename or "Alexander_Davis_Lead_Dev.pdf" }}</strong></p>
-                    </div>
-                    <div class="d-flex gap-2 w-100 w-lg-auto flex-column flex-lg-row">
-                        <a href="/download_pdf" class="btn btn-pill btn-pill-secondary py-2 order-2 order-lg-1" id="download-pdf-btn">
-                            <i class="fas fa-file-pdf me-1"></i> <span class="d-none d-md-inline">PDF Report</span><span class="d-md-none">PDF</span>
-                        </a>
-                        <a href="/" class="btn btn-pill btn-pill-primary py-2 order-1 order-lg-2">
-                            <i class="fas fa-plus me-1"></i> <span class="d-none d-md-inline">New Scan</span><span class="d-md-none">New</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Core Metrics Widget -->
-                <div class="row mb-4">
-                    <div class="col-12 widget-ats-score">
-                        <div class="card-widget-lens">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <span class="widget-title-lens m-0">Core Metrics</span>
-                                <i class="fas fa-ellipsis-h text-secondary cursor-pointer"></i>
-                            </div>
-                            
-                            <div class="gauge-flex-wrap-lens">
-                                <!-- Overall Score -->
-                                <div class="gauge-item-lens">
-                                    <div class="gauge-container-lens">
-                                        <svg class="gauge-svg-lens" viewBox="0 0 100 100" width="100%" height="100%">
-                                            <circle class="gauge-bg-lens" stroke-width="5" r="42" cx="50" cy="50" />
-                                            <circle id="gauge-final" class="gauge-fill-lens" stroke="white" stroke-dasharray="263.89" stroke-dashoffset="263.89" stroke-width="5" r="42" cx="50" cy="50" />
-                                        </svg>
-                                        <div class="gauge-val-text-lens" id="text-gauge-final">0%</div>
-                                    </div>
-                                    <div class="gauge-label-lens">Overall ATS Score</div>
-                                </div>
-                                <!-- Skill Match -->
-                                <div class="gauge-item-lens">
-                                    <div class="gauge-container-lens">
-                                        <svg class="gauge-svg-lens" viewBox="0 0 100 100" width="100%" height="100%">
-                                            <circle class="gauge-bg-lens" stroke-width="5" r="42" cx="50" cy="50" />
-                                            <circle id="gauge-skill" class="gauge-fill-lens" stroke="white" stroke-dasharray="263.89" stroke-dashoffset="263.89" stroke-width="5" r="42" cx="50" cy="50" />
-                                        </svg>
-                                        <div class="gauge-val-text-lens" id="text-gauge-skill">0%</div>
-                                    </div>
-                                    <div class="gauge-label-lens">Skill Match</div>
-                                </div>
-                                <!-- Semantic Match -->
-                                <div class="gauge-item-lens">
-                                    <div class="gauge-container-lens">
-                                        <svg class="gauge-svg-lens" viewBox="0 0 100 100" width="100%" height="100%">
-                                            <circle class="gauge-bg-lens" stroke-width="5" r="42" cx="50" cy="50" />
-                                            <circle id="gauge-semantic" class="gauge-fill-lens" stroke="white" stroke-dasharray="263.89" stroke-dashoffset="263.89" stroke-width="5" r="42" cx="50" cy="50" />
-                                        </svg>
-                                        <div class="gauge-val-text-lens" id="text-gauge-semantic">0%</div>
-                                    </div>
-                                    <div class="gauge-label-lens">Semantic Match</div>
-                                </div>
-                                <!-- Resume Strength -->
-                                <div class="gauge-item-lens">
-                                    <div class="badge-strength-circle-lens" id="badge-strength-icon">
-                                        <i class="fas fa-circle-check"></i>
-                                    </div>
-                                    <div class="gauge-label-lens fw-bold text-white mb-1" id="text-badge-strength">Job Ready</div>
-                                    <div class="small text-secondary" style="font-size: 0.75rem;">Resume Strength</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Two Column Details -->
-                <div class="row g-4">
-                    <!-- Left: AI Verdict -->
-                    <div class="col-lg-7 widget-verdict">
-                        <div class="card-widget-lens">
-                            <div class="verdict-header-lens">
-                                <i class="fas fa-robot"></i> AI Verdict
-                            </div>
-                            <h3 class="verdict-title-lens" id="verdict-title-label">Strong candidate profile, but lacking measurable impacts.</h3>
-
-                            <div class="verdict-list-title-lens plus">
-                                <i class="fas fa-circle-plus"></i> Strengths
-                            </div>
-                            <ul class="verdict-list-lens plus" id="verdict-strengths-list">
-                                <!-- Loaded dynamically -->
-                            </ul>
-
-                            <div class="verdict-list-title-lens minus text-secondary">
-                                <i class="fas fa-circle-minus"></i> Areas for Improvement
-                            </div>
-                            <ul class="verdict-list-lens minus" id="verdict-weaknesses-list">
-                                <!-- Loaded dynamically -->
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Right: Quick Wins -->
-                    <div class="col-lg-5 widget-recommendations">
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Quick Wins</div>
-                            <div class="d-flex flex-column" id="quick-wins-list-wrapper">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ==========================================================
-                 TAB VIEW: ANALYSIS
-                 ========================================================== -->
-            <div class="tab-view-lens" id="analysis-tab-view">
-                
-                <!-- Header -->
-                <div class="canvas-header-lens widget-header-analysis">
-                    <h1 class="canvas-title-lens">Detailed Analysis</h1>
-                    <p class="canvas-subtitle-lens">ATS Compliance checklists and prioritized formatting suggestions.</p>
-                </div>
-
-                <div class="row g-4">
-                    <!-- Left: Suggestions -->
-                    <div class="col-lg-7 widget-checklist-suggestions">
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Prioritized Structure Improvements</div>
-                            <div class="d-flex flex-column gap-3" id="suggestions-list-wrapper">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: Compliance & Extraction Details -->
-                    <div class="col-lg-5 d-flex flex-column gap-4 widget-checklist-compliance">
-                        <!-- ATS Compliance Card -->
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">ATS Compliance</div>
-                            <div class="d-flex flex-column" id="compliance-checklist-wrapper">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
-
-                        <!-- Extraction Details Card -->
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Parsing Details</div>
-                            <div class="d-flex flex-column gap-3">
-                                <div class="p-3 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-5">
-                                    <span class="small text-muted font-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.05em;">Text Parse Method</span>
-                                    <h6 class="fw-bold mb-0 mt-1" id="parse-method-label">PDF Text Extraction</h6>
-                                </div>
-                                <div class="row g-3">
-                                    <div class="col-6">
-                                        <div class="p-3 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-5">
-                                            <span class="small text-muted font-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.05em;">Action Verbs</span>
-                                            <h4 class="fw-bold mb-0 mt-1" id="action-verbs-count-label">0</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="p-3 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-5">
-                                            <span class="small text-muted font-bold text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.05em;">Quantifiers</span>
-                                            <h4 class="fw-bold mb-0 mt-1" id="quantifiers-count-label">0</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ==========================================================
-                 TAB VIEW: SKILLS (IMAGE 3)
-                 ========================================================== -->
-            <div class="tab-view-lens" id="skills-tab-view">
-                
-                <!-- Header -->
-                <div class="canvas-header-lens widget-header-skills">
-                    <h1 class="canvas-title-lens">Skills Intelligence &amp; Roadmap</h1>
-                    <p class="canvas-subtitle-lens">Strategic skill gap analysis for target roles.</p>
-                </div>
-
-                <!-- Main Content Row -->
-                <div class="row g-4 mb-4">
-                    <!-- Left: Missing Skills Intelligence -->
-                    <div class="col-lg-7 widget-skill-gap">
-                        <div class="card-widget-lens">
-                            <div class="gap-analysis-header-lens">
-                                <span class="widget-title-lens m-0">Missing Skills Intelligence</span>
-                                <span class="gap-analysis-count-lens" id="skills-gap-badge-count">0 Critical Gaps</span>
-                            </div>
-
-                            <div class="d-flex flex-column" id="skills-missing-wrapper">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: Learning Roadmap -->
-                    <div class="col-lg-5 widget-roadmap">
-                        <div class="card-widget-lens">
-                            <div class="d-flex justify-content-between align-items-center mb-4">
-                                <span class="widget-title-lens m-0">Learning Roadmap</span>
-                                <i class="fas fa-ellipsis-h text-secondary cursor-pointer"></i>
-                            </div>
-
-                            <div class="timeline-card-lens" id="skills-roadmap-timeline-wrapper">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom row: Charts -->
-                <div class="row g-4 widget-charts-row">
-                    <!-- Radar Chart -->
-                    <div class="col-md-6 widget-chart-radar">
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Skill Coverage</div>
-                            <div style="position: relative; height: 280px; width: 100%;">
-                                <canvas id="radar-chart-lens"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Donut Chart -->
-                    <div class="col-md-6 widget-chart-donut">
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Experience Distribution</div>
-                            <div style="position: relative; height: 280px; width: 100%;">
-                                <canvas id="donut-chart-lens"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ==========================================================
-                 TAB VIEW: ANALYTICS
-                 ========================================================== -->
-            <div class="tab-view-lens" id="analytics-tab-view">
-                
-                <div class="canvas-header-lens widget-header-analytics">
-                    <h1 class="canvas-title-lens">Analytics &amp; Breakdown</h1>
-                    <p class="canvas-subtitle-lens">Deep dive into resume performance and suggestions statistics.</p>
-                </div>
-
-                <div class="row g-4 mb-4">
-                    <div class="col-md-6 widget-analytics-categories">
-                        <!-- Category progress -->
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Category Match Progression</div>
-                            <div class="d-flex flex-column gap-4" id="analytics-categories-wrapper">
-                                <!-- Loaded dynamically -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 widget-analytics-summary">
-                        <!-- Technical suggestions list -->
-                        <div class="card-widget-lens">
-                            <div class="widget-title-lens">Matches &amp; Gaps Summary</div>
-                            <div class="d-flex flex-column gap-3">
-                                <div class="p-3 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-5">
-                                    <h6 class="small font-bold text-muted text-uppercase" style="letter-spacing: 0.05em; font-size: 0.65rem; margin-bottom: 0.75rem;">Matched Keywords</h6>
-                                    <div class="d-flex flex-wrap" id="analytics-matched-skills-pills">
-                                        <!-- Loaded dynamically -->
-                                    </div>
-                                </div>
-                                <div class="p-3 rounded-3 bg-white bg-opacity-5 border border-white border-opacity-5">
-                                    <h6 class="small font-bold text-muted text-uppercase" style="letter-spacing: 0.05em; font-size: 0.65rem; margin-bottom: 0.75rem;">Missing Keywords</h6>
-                                    <div class="d-flex flex-wrap" id="analytics-missing-skills-pills">
-                                        <!-- Loaded dynamically -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ==========================================================
-                 TAB VIEW: HISTORY
-                 ========================================================== -->
-            <div class="tab-view-lens" id="history-tab-view">
-                
-                <div class="canvas-header-lens widget-header-history">
-                    <h1 class="canvas-title-lens">Scan History</h1>
-                    <p class="canvas-subtitle-lens">Review previous resume scanning logs stored in this browser cache.</p>
-                </div>
-
-                <div class="card-widget-lens widget-history">
-                    <div id="history-list-wrapper">
-                        <!-- Loaded dynamically -->
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
+        <button type="button" class="btn-cl-ghost" data-bs-toggle="modal" data-bs-target="#settingsModal" aria-label="Settings" title="Session Settings">
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+        <a href="/download_pdf" class="btn-cl-secondary" id="download-pdf-btn">
+          <span class="material-symbols-outlined" style="font-size:15px;">download</span>
+          Export PDF
+        </a>
+        <a href="/" class="btn-cl-primary">
+          <span class="material-symbols-outlined" style="font-size:15px;">add</span>
+          New Scan
+        </a>
+      </div>
     </div>
+  </header>
 
-    <!-- ============ Settings Modal ============ -->
-    <div class="modal fade" id="settingsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border border-white border-opacity-10 rounded-4" style="background-color: var(--surface-dark); color: var(--text-main);">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Settings</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body py-4">
+  <!-- ════════════════════════════════════════════
+       MAIN DASHBOARD CONTENT
+       ════════════════════════════════════════════ -->
+  <main class="cl-main-centered">
 
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-1">Clear Search Logs</h6>
-                            <p class="text-secondary small mb-0">Erase cached scan runs in the database.</p>
-                        </div>
-                        <button class="btn btn-sm btn-outline-danger" onclick="clearDatabaseHistory();">Clear History</button>
-                    </div>
-                </div>
-            </div>
+    <!-- ══════════════════════════════
+         TAB 1: OVERVIEW
+         ══════════════════════════════ -->
+    <section class="tab-view-lens active" id="overview-tab-view">
+      <div class="cl-page-header">
+        <div>
+          <h1 class="cl-page-title">Executive Overview</h1>
+          <p class="cl-page-subtitle">COMPREHENSIVE RESUME &amp; ATS SCORING DIAGNOSTIC</p>
         </div>
+      </div>
+
+      <!-- Core Metrics Row -->
+      <div class="cl-gauge-grid" role="region" aria-label="Score metrics">
+        <!-- Overall ATS Score -->
+        <div class="cl-gauge-card">
+          <div class="label-mono">Overall ATS</div>
+          <div class="cl-ring-container" role="img" aria-labelledby="ats-score-label">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" class="cl-gauge-track" stroke-width="5"/>
+              <circle id="gauge-final" class="progress-ring" cx="50" cy="50" r="42" fill="none"
+                      stroke-width="5"
+                      stroke-dasharray="263.89" stroke-dashoffset="263.89"
+                      stroke-linecap="round"/>
+            </svg>
+            <div class="cl-ring-label" id="text-gauge-final" aria-live="polite">0%</div>
+          </div>
+          <div class="cl-gauge-subtitle">Match Ratio</div>
+        </div>
+
+        <!-- Skill Match -->
+        <div class="cl-gauge-card">
+          <div class="label-mono">Skill Match</div>
+          <div class="cl-ring-container" role="img">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" class="cl-gauge-track" stroke-width="5"/>
+              <circle id="gauge-skill" class="progress-ring" cx="50" cy="50" r="42" fill="none"
+                      stroke-width="5"
+                      stroke-dasharray="263.89" stroke-dashoffset="263.89"
+                      stroke-linecap="round"/>
+            </svg>
+            <div class="cl-ring-label" id="text-gauge-skill" aria-live="polite">0%</div>
+          </div>
+          <div class="cl-gauge-subtitle">Required Stack</div>
+        </div>
+
+        <!-- Semantic Relevance -->
+        <div class="cl-gauge-card">
+          <div class="label-mono">Semantic Fit</div>
+          <div class="cl-ring-container" role="img">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" class="cl-gauge-track" stroke-width="5"/>
+              <circle id="gauge-semantic" class="progress-ring" cx="50" cy="50" r="42" fill="none"
+                      stroke-width="5"
+                      stroke-dasharray="263.89" stroke-dashoffset="263.89"
+                      stroke-linecap="round"/>
+            </svg>
+            <div class="cl-ring-label" id="text-gauge-semantic" aria-live="polite">0%</div>
+          </div>
+          <div class="cl-gauge-subtitle">Context Relevance</div>
+        </div>
+
+        <!-- Profile Strength -->
+        <div class="cl-gauge-card">
+          <div class="label-mono">Profile Level</div>
+          <div class="cl-strength-icon" id="profile-strength-icon">
+            <span class="material-symbols-outlined" style="font-size:32px;">verified</span>
+          </div>
+          <div style="font-family:var(--font-head);font-size:16px;font-weight:700;margin-bottom:2px;" id="text-profile-strength">
+            Calculating...
+          </div>
+          <div class="cl-gauge-subtitle">Executive Rating</div>
+        </div>
+      </div>
+
+      <!-- Quick Strengths & Priority Recommendations Grid -->
+      <div class="cl-details-grid">
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">thumb_up</span>
+            Profile Strengths
+          </div>
+          <div id="overview-wins-wrapper"></div>
+        </div>
+
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">priority_high</span>
+            Critical Improvements
+          </div>
+          <div id="overview-suggestions-wrapper"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         TAB 2: ANALYSIS
+         ══════════════════════════════ -->
+    <section class="tab-view-lens" id="analysis-tab-view">
+      <div class="cl-page-header">
+        <div>
+          <h1 class="cl-page-title">ATS Diagnostics &amp; Compliance</h1>
+          <p class="cl-page-subtitle">PARSER COMPLIANCE, CHECKLISTS, AND ACTION ROADMAP</p>
+        </div>
+      </div>
+
+      <div class="cl-details-grid" style="margin-bottom:16px;">
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">checklist</span>
+            ATS Compliance Checklist
+          </div>
+          <div id="analysis-compliance-wrapper"></div>
+        </div>
+
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">route</span>
+            Actionable Optimization Roadmap
+          </div>
+          <div class="cl-timeline" id="analysis-roadmap-wrapper"></div>
+        </div>
+      </div>
+
+      <div class="cl-section-card">
+        <div class="cl-section-title">
+          <span class="material-symbols-outlined">summarize</span>
+          Full Suggestions Matrix
+        </div>
+        <div id="analysis-full-suggestions-wrapper"></div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         TAB 3: SKILLS
+         ══════════════════════════════ -->
+    <section class="tab-view-lens" id="skills-tab-view">
+      <div class="cl-page-header">
+        <div>
+          <h1 class="cl-page-title">Skill Gap Analysis</h1>
+          <p class="cl-page-subtitle">MATCHED VS. MISSING REQUIRED QUALIFICATIONS</p>
+        </div>
+      </div>
+
+      <div class="cl-skills-grid">
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined" style="color:var(--accent-match);">check_circle</span>
+            Matched Skills &amp; Keywords
+          </div>
+          <div id="skills-matched-wrapper"></div>
+        </div>
+
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined" style="color:var(--accent-miss);">cancel</span>
+            Missing Required Skills
+          </div>
+          <div id="skills-missing-wrapper"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         TAB 4: ANALYTICS
+         ══════════════════════════════ -->
+    <section class="tab-view-lens" id="analytics-tab-view">
+      <div class="cl-page-header">
+        <div>
+          <h1 class="cl-page-title">Deep NLP &amp; Keyword Analytics</h1>
+          <p class="cl-page-subtitle">SCORE BREAKDOWNS, RADAR PROFILES, AND DENSITY METRICS</p>
+        </div>
+      </div>
+
+      <div class="cl-analytics-grid" style="margin-bottom:16px;">
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">pie_chart</span>
+            Competency Radar
+          </div>
+          <div style="position:relative;height:260px;">
+            <canvas id="competencyRadarChart"></canvas>
+          </div>
+        </div>
+
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">bar_chart</span>
+            Score Component Breakdown
+          </div>
+          <div style="position:relative;height:260px;">
+            <canvas id="scoreBreakdownBarChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="cl-details-grid">
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">category</span>
+            Domain Category Match
+          </div>
+          <div id="analytics-categories-wrapper"></div>
+        </div>
+
+        <div class="cl-section-card">
+          <div class="cl-section-title">
+            <span class="material-symbols-outlined">label</span>
+            Keywords Breakdown
+          </div>
+          <div style="margin-bottom:16px;">
+            <div class="label-mono" style="color:var(--accent-match);margin-bottom:8px;">Matched Keywords</div>
+            <div id="analytics-matched-skills-pills"></div>
+          </div>
+          <div>
+            <div class="label-mono" style="color:var(--accent-miss);margin-bottom:8px;">Missing Keywords</div>
+            <div id="analytics-missing-skills-pills"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
+         TAB 5: HISTORY
+         ══════════════════════════════ -->
+    <section class="tab-view-lens" id="history-tab-view">
+      <div class="cl-page-header">
+        <div>
+          <h1 class="cl-page-title">Scan History</h1>
+          <p class="cl-page-subtitle">PREVIOUS RESUME ANALYSIS REPORTS STORED IN THIS SESSION</p>
+        </div>
+        <div class="cl-page-actions">
+          <div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);border-radius:var(--radius-pill);padding:0 14px;height:36px;">
+            <span class="material-symbols-outlined" style="font-size:16px;color:var(--text-muted);">search</span>
+            <input type="text" id="history-search-input" placeholder="Search scans..."
+                   oninput="filterHistoryList(this.value)"
+                   style="background:none;border:none;outline:none;color:var(--text-primary);font-size:13px;width:160px;"
+                   aria-label="Search scan history" />
+          </div>
+          <button class="btn-cl-secondary" onclick="sortHistory('date')" style="padding:8px 14px;">
+            <span class="material-symbols-outlined" style="font-size:14px;">sort</span> Date
+          </button>
+          <button class="btn-cl-secondary" onclick="sortHistory('score')" style="padding:8px 14px;">
+            Score
+          </button>
+        </div>
+      </div>
+
+      <div id="history-list-wrapper" aria-live="polite"></div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════════════════
+       EXACT BOTTOM FLOATING CAPSULE MENU (Reference)
+       ════════════════════════════════════════════ -->
+  <nav class="cl-bottom-nav-capsule" role="navigation" aria-label="Dashboard bottom navigation">
+    <button class="cl-bottom-nav-item active sidebar-link-lens" data-tab="overview" aria-label="Overview tab">
+      <span class="material-symbols-outlined">home</span>
+      <span>Overview</span>
+    </button>
+    <button class="cl-bottom-nav-item sidebar-link-lens" data-tab="analysis" aria-label="Analysis tab">
+      <span class="material-symbols-outlined">pie_chart</span>
+      <span>Analysis</span>
+    </button>
+    <button class="cl-bottom-nav-item sidebar-link-lens" data-tab="skills" aria-label="Skills tab">
+      <span class="material-symbols-outlined">edit_note</span>
+      <span>Skills</span>
+    </button>
+    <button class="cl-bottom-nav-item sidebar-link-lens" data-tab="analytics" aria-label="Analytics tab">
+      <span class="material-symbols-outlined">equalizer</span>
+      <span>Analytics</span>
+    </button>
+    <button class="cl-bottom-nav-item sidebar-link-lens" data-tab="history" aria-label="History tab">
+      <span class="material-symbols-outlined">history</span>
+      <span>History</span>
+    </button>
+  </nav>
+
+  <!-- ════ Settings Modal ════ -->
+  <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content cl-modal">
+        <div style="padding:24px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h2 style="font-size:16px;font-weight:700;" id="settingsModalLabel">Session Settings</h2>
+            <button type="button" class="btn-cl-ghost" data-bs-dismiss="modal" aria-label="Close">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid var(--border-subtle);">
+            <div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Interface Theme</div>
+              <div class="label-mono">Switch between Obsidian Dark and High-Contrast Light</div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn-cl-secondary theme-toggle-action" style="padding:6px 12px;font-size:12px;" onclick="applyTheme('dark')">
+                <span class="material-symbols-outlined" style="font-size:14px;">dark_mode</span> Dark
+              </button>
+              <button class="btn-cl-secondary theme-toggle-action" style="padding:6px 12px;font-size:12px;" onclick="applyTheme('light')">
+                <span class="material-symbols-outlined" style="font-size:14px;">light_mode</span> Light
+              </button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid var(--border-subtle);">
+            <div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px;">Clear Scan History</div>
+              <div class="label-mono">Erase all cached scan reports from the database</div>
+            </div>
+            <button class="btn-cl-secondary"
+                    style="border-color:var(--accent-miss-border);color:var(--accent-miss);"
+                    onclick="clearDatabaseHistory()">
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Toast Notifications Container -->
-    <div id="toast-container" class="toast-container-lens" aria-live="polite" aria-atomic="true"></div>
+  <!-- Bootstrap JS for modal -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Injection of Server Results -->
-    <div id="initial-data-holder" data-payload="{{ results_json | tojson | forceescape }}" class="d-none"></div>
-    <script>
-        window.CL_INITIAL_DATA = JSON.parse(document.getElementById('initial-data-holder').getAttribute('data-payload'));
-    </script>
-    
-    <script src="/static/js/app.js"></script>
-
+  <!-- Secure Server Data Payload -->
+  <script id="cl-initial-data" type="application/json">{{ results_json | tojson | safe }}</script>
+  <script src="/static/js/app.js"></script>
 </body>
 </html>
